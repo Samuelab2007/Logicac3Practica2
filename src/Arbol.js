@@ -107,7 +107,37 @@ class Arbol{
         */
     }
 
+    altura(){
+        let p = this.raiz;
+        let maximoNivel = 1;
+        let q = [];
+        let nivel = 1;
 
+        while(p!=null || q.length!==0){
+
+            if(p==null){
+                p = q.pop();    //Nodo para continuar el recorrido.
+                nivel--;    //Al salir de la sublista, el nivel disminuye en uno por cada sublista de la que salgo.
+            }
+
+            if(p !== undefined) {
+                if (p.sw === 1) {
+                    nivel++;
+                    if (p.liga != null) {   //Guarda en la pila si la liga apunta hacia un nodo.
+                        q.push(p.liga);
+                    }
+                    p = p.dato;
+                }else{
+                    p = p.liga;
+                }
+            }
+
+            if(maximoNivel < nivel){
+                maximoNivel = nivel;    //Compara los niveles, guarda el mayor.
+            }
+        }
+        return maximoNivel;
+    }
 
     // Método altura arbol: Hay que guardar todos los niveles de los nodos, luego comparo cual es el mayor y esa es la altura.
     // Necesito establecer los pasos para la búsqueda de elementos en el árbol.
@@ -149,3 +179,4 @@ class NodoArbol{
 
 arbolprueba = new Arbol("(a(b(e,d),c(n,o)))");
 document.getElementById("testing").innerText = arbolprueba.toString();
+alert(arbolprueba.altura());
