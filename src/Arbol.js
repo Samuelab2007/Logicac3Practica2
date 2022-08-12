@@ -139,8 +139,33 @@ class Arbol{
         return maximoNivel;
     }
 
-    // Método altura arbol: Hay que guardar todos los niveles de los nodos, luego comparo cual es el mayor y esa es la altura.
-    // Necesito establecer los pasos para la búsqueda de elementos en el árbol.
+    grado(){
+        let p = this.raiz;
+        let q = [];
+        let gradoArbol = 0;
+        let gradoNodo = 0;
+        while(p!=null || q.length !== 0){
+
+            if(p !== undefined){
+
+                if(p.sw === 1){
+                    q.push(p.dato); //Primer nodo de la sublista.
+                }else{
+                    gradoNodo++;    //Salta el nodo de la sublista y continua contando.
+                }
+                p = p.liga;
+            }
+
+            if(p==null){
+                if(gradoNodo > gradoArbol){
+                    gradoArbol = gradoNodo; //Asigna el mayor grado
+                }
+                p = q.pop();    //Se ubica en el primer nodo de la sublista
+                gradoNodo = 0;  //Vuelve a iniciar el conteo
+            }
+        }
+        return gradoArbol;
+    }
 }
 
 class NodoArbol{
@@ -177,6 +202,6 @@ class NodoArbol{
     }
 }
 
-arbolprueba = new Arbol("(a(b(e,d),c(n,o)))");
+arbolprueba = new Arbol("(a(b(e,d,h),c(n,g)))");
 document.getElementById("testing").innerText = arbolprueba.toString();
-alert(arbolprueba.altura());
+alert(arbolprueba.grado());
