@@ -166,6 +166,36 @@ class Arbol{
         }
         return gradoArbol;
     }
+
+    numeroHojas(){
+        let hojas = 0;
+        let p = this.raiz;
+        let q = [];
+        while(p != null || q.length !== 0){
+
+            if(p == null){
+                p = q.pop();
+            }
+
+            if(p !== undefined) {
+                let siguiente = p.liga;
+                if (p.sw === 0) {
+                    if(siguiente==null){
+                        hojas++;
+                    } else if (siguiente.sw === 0) { //Cuando el nodo no tiene hijos.
+                        hojas++;
+                    }
+                    p = siguiente;
+                } else if (p.sw === 1) {
+                    if (siguiente != null) {
+                        q.push(siguiente);
+                    }
+                    p = p.dato;
+                }
+            }
+        }
+        return hojas;
+    }
 }
 
 class NodoArbol{
@@ -202,6 +232,9 @@ class NodoArbol{
     }
 }
 
-arbolprueba = new Arbol("(a(b(e,d,h),c(n,g)))");
+arbolprueba = new Arbol("(a(b(e,d),c(i),h,u(r,t)))");
 document.getElementById("testing").innerText = arbolprueba.toString();
-alert(arbolprueba.grado());
+document.getElementById("altura").innerText = String(arbolprueba.altura());
+document.getElementById("grado").innerText = String(arbolprueba.grado());
+document.getElementById("hojas").innerText = String(arbolprueba.numeroHojas());
+
