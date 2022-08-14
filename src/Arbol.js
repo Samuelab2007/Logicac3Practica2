@@ -167,6 +167,43 @@ class Arbol{
         return gradoArbol;
     }
 
+    nivelRegistro(dato){
+        let p = this.raiz;
+        let q = [];
+        let nivel = 1;
+        let nivelesSaltados = 0;
+        while(p != null || q.length !== 0){
+            if(p==null){
+                p = q.pop();
+                nivel = nivel - nivelesSaltados - 1;    /*Actualiza el nivel al salir de la sublista
+                en la pila solo se guarda si la liga es hacia otro nodo, por lo tanto para mantener el nivel usamos una variable con la cantidad de niveles
+                a la que no se podrá acceder después.*/
+                nivelesSaltados = 0;
+            }
+            if(p !== undefined){
+                if(p.sw === 0){
+                    if (dato === p.dato) {  //Encuentra el dato, retorna nivel.
+                        return nivel;
+                    }else{
+                        p = p.liga;
+                        continue;
+                    }
+                }
+                if(p.sw === 1){
+                    nivel++;
+                    if(p.liga != null){
+                        q.push(p.liga);
+                    }else{
+                        if(p !== this.raiz.liga) {   //Se usa para ignorar el nivel "saltado" al inicio de la sublista de los hijos de la raiz.
+                            nivelesSaltados++;
+                        }
+                    }
+                    p = p.dato; //Ingresa a la sublista.
+                }
+            }
+        }
+    }
+
     numeroHojas(){
         let hojas = 0;
         let p = this.raiz;
@@ -232,9 +269,9 @@ class NodoArbol{
     }
 }
 
-arbolprueba = new Arbol("(a(b(e,d),c(i),h,u(r,t)))");
+arbolprueba = new Arbol("(a(b(e,d),c(i(o),p),h,u(r,t)))");
 document.getElementById("testing").innerText = arbolprueba.toString();
 document.getElementById("altura").innerText = String(arbolprueba.altura());
 document.getElementById("grado").innerText = String(arbolprueba.grado());
 document.getElementById("hojas").innerText = String(arbolprueba.numeroHojas());
-
+alert("Nivel del registro d es: "+arbolprueba.nivelRegistro("d"));
