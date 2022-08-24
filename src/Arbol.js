@@ -233,6 +233,56 @@ class Arbol{
         }
         return hojas;
     }
+
+    buscarNodo(dato){
+        let p = this.raiz;
+        let q = [];
+        while(p!=null || q.length !== 0){
+            if(p==null){
+                p = q.pop();
+            }
+            if(p!==undefined){
+                if(p.sw === 0){
+                    if(p.dato === dato){
+                        return p;
+                    }else{
+                        p = p.liga;
+                    }
+                }else{
+                    if(p.liga!=null) {
+                        q.push(p.liga);
+                    }
+                    p = p.dato;
+                }
+            }
+        }
+        if(p==null){
+            alert("El nodo no está en el árbol");   //TODO:Manejo de excepciones
+        }
+        return p;
+    }
+
+    gradoNodo(dato){
+         let p = this.buscarNodo(dato);
+         let hijosP = p.liga;
+         let gradoNodo = 0;
+
+         if(hijosP==null){
+             return gradoNodo;
+         }else if(hijosP.sw === 1){
+             hijosP = hijosP.dato;
+             while(hijosP != null){
+                 if(hijosP.sw===0){
+                     gradoNodo++;
+                 }
+                 hijosP = hijosP.liga;
+             }
+             return gradoNodo;
+         }else{
+             return gradoNodo;
+         }
+
+    }
 }
 
 class NodoArbol{
@@ -269,9 +319,10 @@ class NodoArbol{
     }
 }
 
-arbolprueba = new Arbol("(a(b(e,d),c(i(o),p),h,u(r,t)))");
+arbolprueba = new Arbol("(a(b(e,d),c(i(o)),h,u(r,t(y)),w))");
 document.getElementById("testing").innerText = arbolprueba.toString();
 document.getElementById("altura").innerText = String(arbolprueba.altura());
 document.getElementById("grado").innerText = String(arbolprueba.grado());
 document.getElementById("hojas").innerText = String(arbolprueba.numeroHojas());
+document.getElementById("gradoNodo").innerText = String(arbolprueba.gradoNodo("c"));
 alert("Nivel del registro d es: "+arbolprueba.nivelRegistro("d"));
