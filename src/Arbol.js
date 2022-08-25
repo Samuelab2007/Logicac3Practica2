@@ -1,6 +1,6 @@
-class Arbol{
+class Arbol {
 
-    constructor(string){    // Construye a partir de un string ingresado
+    constructor(string) {    // Construye a partir de un string ingresado
         let pila = [];
         let x = new NodoArbol(null);
         this._raiz = x;
@@ -9,14 +9,14 @@ class Arbol{
         let longitud = string.length;
         let i = 1
 
-        while(i < longitud-1) {
-            let elemento = string.substring(i,i+1);
+        while (i < longitud - 1) {
+            let elemento = string.substring(i, i + 1);
             let atomo = /\w/    //Es miembro del alfabeto latino(REGEX)
-            if(atomo.test(elemento)){
+            if (atomo.test(elemento)) {
                 ultimo.sw = 0;
                 ultimo.dato = elemento;
             }
-            switch (elemento){
+            switch (elemento) {
                 case ",":   //Crea un nodo vacío y lo ligo
                     x = new NodoArbol(null);
                     ultimo.liga = x;
@@ -45,29 +45,29 @@ class Arbol{
         }
     }
 
-    get raiz(){
+    get raiz() {
         return this._raiz;
     }
 
-    toString(){
+    toString() {
         let returnedString = "(";
-        let p= this.raiz;
+        let p = this.raiz;
         let q = [];     //Pila con las direcciones para continuar.
         let coma = false;
         let parentesisalfinal = 0;
-        while(p!=null || q.length!==0 || parentesisalfinal>0){
+        while (p != null || q.length !== 0 || parentesisalfinal > 0) {
 
-            if(p==null){     //Cuando termina de recorrer la sublista, reasigna p y continua el recorrido.
+            if (p == null) {     //Cuando termina de recorrer la sublista, reasigna p y continua el recorrido.
                 returnedString = returnedString.concat(")");
                 p = q.pop();
 
-                while(parentesisalfinal>0){    //Parentesis que cierran la sublista
+                while (parentesisalfinal > 0) {    //Parentesis que cierran la sublista
                     returnedString = returnedString.concat(")");
                     parentesisalfinal--;
                 }
 
             }
-            if(p!==undefined) {
+            if (p !== undefined) {
                 if (Number(p.sw) === 1) {
                     returnedString = returnedString.concat("(");
                     coma = false;
@@ -89,7 +89,7 @@ class Arbol{
                 }
             }
         }
-        if(p===null && q.length===0 && parentesisalfinal===0){
+        if (p === null && q.length === 0 && parentesisalfinal === 0) {
             returnedString = returnedString.concat(")");
         }
         returnedString = returnedString.concat(")");
@@ -107,57 +107,57 @@ class Arbol{
         */
     }
 
-    altura(){
+    altura() {
         let p = this.raiz;
         let maximoNivel = 1;
         let q = [];
         let nivel = 1;
 
-        while(p!=null || q.length!==0){
+        while (p != null || q.length !== 0) {
 
-            if(p==null){
+            if (p == null) {
                 p = q.pop();    //Nodo para continuar el recorrido.
                 nivel--;    //Al salir de la sublista, el nivel disminuye en uno por cada sublista de la que salgo.
             }
 
-            if(p !== undefined) {
+            if (p !== undefined) {
                 if (p.sw === 1) {
                     nivel++;
                     if (p.liga != null) {   //Guarda en la pila si la liga apunta hacia un nodo.
                         q.push(p.liga);
                     }
                     p = p.dato;
-                }else{
+                } else {
                     p = p.liga;
                 }
             }
 
-            if(maximoNivel < nivel){
+            if (maximoNivel < nivel) {
                 maximoNivel = nivel;    //Compara los niveles, guarda el mayor.
             }
         }
         return maximoNivel;
     }
 
-    grado(){
+    grado() {
         let p = this.raiz;
         let q = [];
         let gradoArbol = 0;
         let gradoNodo = 0;
-        while(p!=null || q.length !== 0){
+        while (p != null || q.length !== 0) {
 
-            if(p !== undefined){
+            if (p !== undefined) {
 
-                if(p.sw === 1){
+                if (p.sw === 1) {
                     q.push(p.dato); //Primer nodo de la sublista.
-                }else{
+                } else {
                     gradoNodo++;    //Salta el nodo de la sublista y continua contando.
                 }
                 p = p.liga;
             }
 
-            if(p==null){
-                if(gradoNodo > gradoArbol){
+            if (p == null) {
+                if (gradoNodo > gradoArbol) {
                     gradoArbol = gradoNodo; //Asigna el mayor grado
                 }
                 p = q.pop();    //Se ubica en el primer nodo de la sublista
@@ -167,34 +167,34 @@ class Arbol{
         return gradoArbol;
     }
 
-    nivelRegistro(dato){
+    nivelRegistro(dato) {
         let p = this.raiz;
         let q = [];
         let nivel = 1;
         let nivelesSaltados = 0;
-        while(p != null || q.length !== 0){
-            if(p==null){
+        while (p != null || q.length !== 0) {
+            if (p == null) {
                 p = q.pop();
                 nivel = nivel - nivelesSaltados - 1;    /*Actualiza el nivel al salir de la sublista
                 en la pila solo se guarda si la liga es hacia otro nodo, por lo tanto para mantener el nivel usamos una variable con la cantidad de niveles
                 a la que no se podrá acceder después.*/
                 nivelesSaltados = 0;
             }
-            if(p !== undefined){
-                if(p.sw === 0){
+            if (p !== undefined) {
+                if (p.sw === 0) {
                     if (dato === p.dato) {  //Encuentra el dato, retorna nivel.
                         return nivel;
-                    }else{
+                    } else {
                         p = p.liga;
                         continue;
                     }
                 }
-                if(p.sw === 1){
+                if (p.sw === 1) {
                     nivel++;
-                    if(p.liga != null){
+                    if (p.liga != null) {
                         q.push(p.liga);
-                    }else{
-                        if(p !== this.raiz.liga) {   //Se usa para ignorar el nivel "saltado" al inicio de la sublista de los hijos de la raiz.
+                    } else {
+                        if (p !== this.raiz.liga) {   //Se usa para ignorar el nivel "saltado" al inicio de la sublista de los hijos de la raiz.
                             nivelesSaltados++;
                         }
                     }
@@ -204,20 +204,20 @@ class Arbol{
         }
     }
 
-    numeroHojas(){
+    numeroHojas() {
         let hojas = 0;
         let p = this.raiz;
         let q = [];
-        while(p != null || q.length !== 0){
+        while (p != null || q.length !== 0) {
 
-            if(p == null){
+            if (p == null) {
                 p = q.pop();
             }
 
-            if(p !== undefined) {
+            if (p !== undefined) {
                 let siguiente = p.liga;
                 if (p.sw === 0) {
-                    if(siguiente==null){
+                    if (siguiente == null) {
                         hojas++;
                     } else if (siguiente.sw === 0) { //Cuando el nodo no tiene hijos.
                         hojas++;
@@ -234,63 +234,105 @@ class Arbol{
         return hojas;
     }
 
-    buscarNodo(dato){
+    buscarNodo(dato) {
         let p = this.raiz;
         let q = [];
-        while(p!=null || q.length !== 0){
-            if(p==null){
+        while (p != null || q.length !== 0) {
+            if (p == null) {
                 p = q.pop();
             }
-            if(p!==undefined){
-                if(p.sw === 0){
-                    if(p.dato === dato){
+            if (p !== undefined) {
+                if (p.sw === 0) {
+                    if (p.dato === dato) {
                         return p;
-                    }else{
+                    } else {
                         p = p.liga;
                     }
-                }else{
-                    if(p.liga!=null) {
+                } else {
+                    if (p.liga != null) {
                         q.push(p.liga);
                     }
                     p = p.dato;
                 }
             }
         }
-        if(p==null){
+        if (p == null) {
             alert("El nodo no está en el árbol");   //TODO:Manejo de excepciones
         }
         return p;
     }
 
-    gradoNodo(dato){
-         let p = this.buscarNodo(dato);
-         let hijosP = p.liga;
-         let gradoNodo = 0;
+    gradoNodo(dato) {
+        let p = this.buscarNodo(dato);
+        let hijosP = p.liga;
+        let gradoNodo = 0;
 
-         if(hijosP==null){
-             return gradoNodo;
-         }else if(hijosP.sw === 1){
-             hijosP = hijosP.dato;
-             while(hijosP != null){
-                 if(hijosP.sw===0){
-                     gradoNodo++;
-                 }
-                 hijosP = hijosP.liga;
-             }
-             return gradoNodo;
-         }else{
-             return gradoNodo;
-         }
+        if (hijosP == null) {
+            return gradoNodo;
+        } else if (hijosP.sw === 1) {
+            hijosP = hijosP.dato;
+            while (hijosP != null) {
+                if (hijosP.sw === 0) {
+                    gradoNodo++;
+                }
+                hijosP = hijosP.liga;
+            }
+            return gradoNodo;
+        } else {
+            return gradoNodo;
+        }
 
     }
-}
 
+    ancestrosRegistro(dato) {
+        let p = this.raiz;
+        let anterior = null;
+        let q = [];
+        let ancestros = [];
+        let finesdeLista = 0;
+
+        while (p != null || q.length !== 0) {
+            if(p == null){
+                p = q.pop();
+                ancestros.pop();
+                while(finesdeLista > 0){
+                    ancestros.pop();
+                    finesdeLista--;
+                }
+            }
+
+            if (p !== undefined) {
+                if (p.sw === 0) {
+                    if(p.dato === dato){
+                        return ancestros.reverse();
+                    }
+                    anterior = p;
+                    p = p.liga;
+
+                }else if (p.sw === 1) {
+                    ancestros.push(anterior);   //El padre de la sublista.
+                    if (p.liga != null) {
+                        q.push(p.liga);
+                    }else if(p!==this.raiz.liga){
+                        finesdeLista++; /*Para sincronizar ambas pilas, cuando no puedo guardar la liga de la sublista,
+                                        debo devolverme una vez más de lo normal en la lista de ancestros para mantener la cadena de ancestros */
+                    }
+                    p = p.dato;
+                }
+            }
+        }
+    }   //Se retornan de mayor a menor cercanía con el registro.
+}
 class NodoArbol{
 
     constructor(dato) {
         this._dato = dato
         this._sw = null
         this._liga = null
+    }
+
+    toString(){
+        return this.dato;
     }
 
     // Getters y setters para el nodo
@@ -319,10 +361,12 @@ class NodoArbol{
     }
 }
 
-arbolprueba = new Arbol("(a(b(e,d),c(i(o)),h,u(r,t(y)),w))");
+arbolprueba = new Arbol("(a(b(e,d),c(i(o)),h,u(r(y),t),w))");
 document.getElementById("testing").innerText = arbolprueba.toString();
 document.getElementById("altura").innerText = String(arbolprueba.altura());
 document.getElementById("grado").innerText = String(arbolprueba.grado());
 document.getElementById("hojas").innerText = String(arbolprueba.numeroHojas());
 document.getElementById("gradoNodo").innerText = String(arbolprueba.gradoNodo("c"));
-alert("Nivel del registro d es: "+arbolprueba.nivelRegistro("d"));
+alert(arbolprueba.ancestrosRegistro("w"));
+
+//alert("Nivel del registro d es: "+arbolprueba.nivelRegistro("d"));
