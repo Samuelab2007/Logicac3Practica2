@@ -6,7 +6,7 @@
 El String está contenido entre paréntesis izquierdo y derecho ().
  <br>"a": Caracter del alfabeto latino, incluye numeros y letras.
  <br>",": Los elementos antes y después del símbolo son hermanos entre sí en el árbol, están en el mismo nivel y comparten padre.
- <br>"(": El elemento a la izquierda es el padre, los de la izquierda(pueden ser varios) son sus hijos.
+ <br>"(": El elemento a la izquierda es el padre, los de la izquierda(pueden ser varios) son sus hijos. **Sólo puede estar acompañado a ambos lados de elementos de tipo "a"**
  <br>")": Sirve para cerrar los conjuntos de elementos.
  
  Ejemplo: "(a(b(c,d),f(g),h))"
