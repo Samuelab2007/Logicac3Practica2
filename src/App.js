@@ -1,3 +1,7 @@
+import React, {Component} from 'react';
+import "./styles.css";
+import {Button, Grid, TextField, Typography} from "@material-ui/core";
+
 class Arbol {
 
     constructor(string) {    // Construye a partir de un string ingresado
@@ -23,7 +27,6 @@ class Arbol {
                     ultimo = x;
                     break;
                 case "(":
-
                     x = new NodoArbol(null);    //Creo un nodo vacio y lo ligo a mi lista
                     ultimo.liga = x;
                     ultimo = x;
@@ -39,6 +42,8 @@ class Arbol {
                 case ")":
                     ultimo = pila.pop();    //Me ubico para poder continuar la lista.
                     anclajeContinuacion = ultimo;
+                    break;
+                default:
                     break;
             }
             i++;
@@ -323,6 +328,7 @@ class Arbol {
         }
     }   //Se retornan de mayor a menor cercanía con el registro.
 }
+
 class NodoArbol{
 
     constructor(dato) {
@@ -361,12 +367,60 @@ class NodoArbol{
     }
 }
 
-arbolprueba = new Arbol("(a(b(e,d),c(i(o)),h,u(r(y),t),w))");
-document.getElementById("testing").innerText = arbolprueba.toString();
-document.getElementById("altura").innerText = String(arbolprueba.altura());
-document.getElementById("grado").innerText = String(arbolprueba.grado());
-document.getElementById("hojas").innerText = String(arbolprueba.numeroHojas());
-document.getElementById("gradoNodo").innerText = String(arbolprueba.gradoNodo("c"));
-alert(arbolprueba.ancestrosRegistro("w"));
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            arbol: "",
+            orders: 0,
+        };
+    }
 
-//alert("Nivel del registro d es: "+arbolprueba.nivelRegistro("d"));
+    async componentDidMount(){
+        let arbolprueba = new Arbol("(a(b(e,d),c(i(o)),h,u(r(y),t),w))");
+        console.log(arbolprueba);
+    }
+
+    handleChangeTextField = e => {
+        e.preventDefault();
+        this.setState({ arbol: e.target.value });
+    }
+
+    render() {
+        return (
+            <div className={"form-register"}>
+                <Grid container spacing={2} >
+                    <Grid item sm={12} xs={12} >
+                        <Typography id={"title"}>Árboles n-arios</Typography>
+                    </Grid>
+                    <Grid item sm={12} xs={12} >
+                        <TextField
+                            type="text"
+                            fullWidth
+                            label="Ingrese el arbol*"
+                            variant="outlined"
+                            InputProps={{ maxLength: 50, className: "controls" }}
+                            InputLabelProps={{
+                                className: "colorWhite",
+                            }}
+                            value={this.state.arbol}
+                            onChange={this.handleChangeTextField}
+                        />
+                    </Grid>
+                    <Grid item sm={12} xs={12}>
+                        <Button
+                            styled={{marginTop: 100}}
+                            color={"primary"}
+                            fullWidth
+                            variant="contained"
+                            onClick={this.handleEditOffice}
+                        > "Crear"
+                        </Button>
+                    </Grid>
+            </Grid>
+            </div>
+        );
+    }
+}
+
+export default App;
