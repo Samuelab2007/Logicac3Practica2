@@ -263,7 +263,15 @@ class Arbol {
             }
         }
         if (p == null) {
-            alert("El nodo no está en el árbol");   //TODO:Manejo de excepciones
+            //TODO:Manejo de excepciones
+            Swal.fire({
+                title: "<span style='color:white'>" + "Error!" + "</span>",
+                html: "<span style='color:white; z-index:1400'>" + "El nodo no está en el árbol" + "</span>",
+                icon: 'error',
+                background: '#2c2d31',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: "#0f4198",
+            });
         }
         return p;
     }
@@ -379,13 +387,13 @@ class App extends Component {
             gradoArbol: 0,
             resultGradeLog: "",
             resultLevelLog: "",
-            displayResult: "none"
+            displayResultTree: "none",
+            displayResultGradeLog: "none",
         };
     }
 
     async componentDidMount(){
-        let arbolprueba = new Arbol("(a(b(e,d),c(i(o)),h,u(r(y),t),w))");
-        console.log(arbolprueba);
+
     }
 
     handleChangeTextField = e => {
@@ -393,7 +401,7 @@ class App extends Component {
         this.setState({ arbol: e.target.value });
     }
 
-    handleChangeTextFieldGradeRegister = e => {
+    handleChangeTextFieldGradeLog = e => {
         e.preventDefault();
         this.setState({ gradoRegistro: e.target.value });
     }
@@ -419,6 +427,13 @@ class App extends Component {
     handleCreateTree = async (e) => {
         e.preventDefault();
         if (this.validFields(this.state.arbol)) {
+            let resultTree = new Arbol(this.state.arbol);
+            this.setState({
+                displayResultTree: "block",
+                altura: resultTree.altura(),
+                gradoArbol: resultTree.grado(),
+                numeroHojas: resultTree.numeroHojas(),
+            });
 
         }
     }
@@ -426,6 +441,11 @@ class App extends Component {
     handleGradeLog = async (e) => {
         e.preventDefault();
         if (this.validFields(this.state.gradoRegistro)) {
+            let resultTree = new Arbol(this.state.arbol);
+            this.setState({
+                resultGradeLog: resultTree.gradoNodo(this.state.gradoRegistro),
+                displayResultGradeLog: "block",
+            });
 
         }
     }
@@ -450,7 +470,7 @@ class App extends Component {
                             value={this.state.arbol}
                             onChange={this.handleChangeTextField}
                         />
-                        <Typography variant={"p"}> Por favor ingrese un arbol con este formato (a(b(e,d),c(i(o)),h,u(r(y),t),w))</Typography>
+                        <Typography variant={"subtitle2"}> Por favor ingrese un arbol con este formato (a(b(e,d),c(i(o)),h,u(r(y),t),w))</Typography>
                     </Grid>
                     <Grid item sm={12} xs={12}>
                         <Button
@@ -463,10 +483,10 @@ class App extends Component {
                         </Button>
                     </Grid>
                 </Grid>
-                <div className={"result"} style={{display: this.state.displayResult}}>
+                <div className={"result"} style={{display: this.state.displayResultTree}}>
                     <Grid container spacing={2}>
                         <Grid item sm={12} xs={12} >
-                            <Typography variant={"p"}>Resultados del Árbol</Typography>
+                            <Typography variant={"h6"}>Resultados del Árbol</Typography>
                         </Grid>
                         <Grid item sm={6} xs={12}>
                             <TextField
@@ -545,8 +565,8 @@ class App extends Component {
                             > "Enviar"
                             </Button>
                         </Grid>
-                        <Grid item sm={12} xs={12}>
-                            <Typography variant={"h8"}>El grado de su registro es: {this.state.resultGradeLog}</Typography>
+                        <Grid item sm={12} xs={12} style={{display: this.state.displayResultGradeLog}}>
+                            <Typography variant={"subtitle2"}>El grado de su registro es: {this.state.resultGradeLog}</Typography>
                         </Grid>
                         <Grid item sm={9} xs={12}>
                             <TextField
@@ -572,7 +592,7 @@ class App extends Component {
                             </Button>
                         </Grid>
                         <Grid item sm={12} xs={12}>
-                            <Typography variant={"h8"}>El nivel de su registro es: {this.state.resultLevelLog}</Typography>
+                            <Typography variant={"subtitle2"}>El nivel de su registro es: {this.state.resultLevelLog}</Typography>
                         </Grid>
                         <Grid item sm={9} xs={12}>
                             <TextField
@@ -593,12 +613,12 @@ class App extends Component {
                                 color={"primary"}
                                 fullWidth
                                 variant="contained"
-                                onClick={this.handleGradeLog}
+                                onClick={this.handle}
                             > "Enviar"
                             </Button>
                         </Grid>
                         <Grid item sm={12} xs={12}>
-                            <Typography variant={"h8"}>Los ancentros del registro son: {this.state.resultLevelLog}</Typography>
+                            <Typography variant={"subtitle2"}>Los ancentros del registro son: {this.state.resultLevelLog}</Typography>
                         </Grid>
                     </Grid>
                 </div>
