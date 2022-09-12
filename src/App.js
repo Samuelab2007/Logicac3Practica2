@@ -278,24 +278,26 @@ class Arbol {
 
     gradoNodo(dato) {
         let p = this.buscarNodo(dato);
-        let hijosP = p.liga;
-        let gradoNodo = 0;
+        if(p!== null){
+            debugger
+            let hijosP = p.liga;
+            let gradoNodo = 0;
 
-        if (hijosP == null) {
-            return gradoNodo;
-        } else if (hijosP.sw === 1) {
-            hijosP = hijosP.dato;
-            while (hijosP != null) {
-                if (hijosP.sw === 0) {
-                    gradoNodo++;
+            if (hijosP == null) {
+                return gradoNodo;
+            } else if (hijosP.sw === 1) {
+                hijosP = hijosP.dato;
+                while (hijosP != null) {
+                    if (hijosP.sw === 0) {
+                        gradoNodo++;
+                    }
+                    hijosP = hijosP.liga;
                 }
-                hijosP = hijosP.liga;
+                return gradoNodo;
+            } else {
+                return gradoNodo;
             }
-            return gradoNodo;
-        } else {
-            return gradoNodo;
         }
-
     }
 
     ancestrosRegistro(dato) {
@@ -385,10 +387,15 @@ class App extends Component {
             gradoRegistro: "",
             numeroHojas: 0,
             gradoArbol: 0,
+            ancestroRegistro: "",
+            nivelRegistro: "",
             resultGradeLog: "",
             resultLevelLog: "",
+            resultAncestorLog: "",
             displayResultTree: "none",
             displayResultGradeLog: "none",
+            displayResultLevelLog: "none",
+            displayResultAncesterLog: "none",
         };
     }
 
@@ -404,6 +411,16 @@ class App extends Component {
     handleChangeTextFieldGradeLog = e => {
         e.preventDefault();
         this.setState({ gradoRegistro: e.target.value });
+    }
+
+    handleChangeTextFieldLevelLog = e => {
+        e.preventDefault();
+        this.setState({ nivelRegistro: e.target.value });
+    }
+
+    handleChangeTextFieldAncestorLog = e => {
+        e.preventDefault();
+        this.setState({ ancestroRegistro: e.target.value });
     }
 
     validFields = (tree) => {
@@ -434,7 +451,6 @@ class App extends Component {
                 gradoArbol: resultTree.grado(),
                 numeroHojas: resultTree.numeroHojas(),
             });
-
         }
     }
 
@@ -442,11 +458,73 @@ class App extends Component {
         e.preventDefault();
         if (this.validFields(this.state.gradoRegistro)) {
             let resultTree = new Arbol(this.state.arbol);
-            this.setState({
-                resultGradeLog: resultTree.gradoNodo(this.state.gradoRegistro),
-                displayResultGradeLog: "block",
-            });
+            let gradoNodo = resultTree.gradoNodo(this.state.gradoRegistro);
+                this.setState({
+                    resultGradeLog: gradoNodo,
+                    displayResultGradeLog: "block",
+                });
+        }
+    }
 
+    handleLevelLog = async (e) => {
+        e.preventDefault();
+        if (this.validFields(this.state.nivelRegistro)) {
+            let resultTree = new Arbol(this.state.arbol);
+            let gradoRegistro = resultTree.nivelRegistro(this.state.nivelRegistro);
+            if(gradoRegistro){
+                this.setState({
+                    resultLevelLog: gradoRegistro,
+                    displayResultLevelLog: "block",
+                });
+            } else{
+                this.setState({
+                    resultLevelLog: "",
+                    displayResultLevelLog: "none",
+                });
+                Swal.fire({
+                    title: "<span style='color:white'>" + "Error!" + "</span>",
+                    html: "<span style='color:white; z-index:1400'>" + "El nodo no está en el árbol" + "</span>",
+                    icon: 'error',
+                    background: '#2c2d31',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: "#0f4198",
+                });
+            }
+        }
+    }
+
+    handleAncestorLog = async (e) => {
+        e.preventDefault();
+        if (this.validFields(this.state.ancestroRegistro)) {
+            let resultTree = new Arbol(this.state.arbol);
+            let ancenstroRegistro = resultTree.ancestrosRegistro(this.state.ancestroRegistro);
+            if(ancenstroRegistro){
+                if (ancenstroRegistro.length !== 0){
+                    this.setState({
+                        resultAncestorLog: ancenstroRegistro.join(),
+                        displayResultAncesterLog: "block",
+                    });
+                } else{
+                    this.setState({
+                        resultAncestorLog: 0,
+                        displayResultAncesterLog: "block",
+                    });
+                }
+
+            } else{
+                this.setState({
+                    resultAncestorLog: "",
+                    displayResultAncesterLog: "none",
+                });
+                Swal.fire({
+                    title: "<span style='color:white'>" + "Error!" + "</span>",
+                    html: "<span style='color:white; z-index:1400'>" + "El nodo no está en el árbol" + "</span>",
+                    icon: 'error',
+                    background: '#2c2d31',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: "#0f4198",
+                });
+            }
         }
     }
 
@@ -578,8 +656,8 @@ class App extends Component {
                                 InputLabelProps={{
                                     className: "colorWhite",
                                 }}
-                                value={this.state.gradoRegistro}
-                                onChange={this.handleChangeTextFieldGradeLog}
+                                value={this.state.nivelRegistro}
+                                onChange={this.handleChangeTextFieldLevelLog}
                             />
                         </Grid>
                         <Grid item sm={3} xs={12}>
@@ -587,11 +665,11 @@ class App extends Component {
                                 color={"primary"}
                                 fullWidth
                                 variant="contained"
-                                onClick={this.handleGradeLog}
+                                onClick={this.handleLevelLog}
                             > "Enviar"
                             </Button>
                         </Grid>
-                        <Grid item sm={12} xs={12}>
+                        <Grid item sm={12} xs={12} style={{display: this.state.displayResultLevelLog}}>
                             <Typography variant={"subtitle2"}>El nivel de su registro es: {this.state.resultLevelLog}</Typography>
                         </Grid>
                         <Grid item sm={9} xs={12}>
@@ -604,8 +682,8 @@ class App extends Component {
                                 InputLabelProps={{
                                     className: "colorWhite",
                                 }}
-                                value={this.state.gradoRegistro}
-                                onChange={this.handleChangeTextFieldGradeLog}
+                                value={this.state.ancestroRegistro}
+                                onChange={this.handleChangeTextFieldAncestorLog}
                             />
                         </Grid>
                         <Grid item sm={3} xs={12}>
@@ -613,12 +691,12 @@ class App extends Component {
                                 color={"primary"}
                                 fullWidth
                                 variant="contained"
-                                onClick={this.handle}
+                                onClick={this.handleAncestorLog}
                             > "Enviar"
                             </Button>
                         </Grid>
-                        <Grid item sm={12} xs={12}>
-                            <Typography variant={"subtitle2"}>Los ancentros del registro son: {this.state.resultLevelLog}</Typography>
+                        <Grid item sm={12} xs={12} style={{display: this.state.displayResultAncesterLog}}>
+                            <Typography variant={"subtitle2"}>Los ancentros del registro son: {this.state.resultAncestorLog}</Typography>
                         </Grid>
                     </Grid>
                 </div>
