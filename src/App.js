@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import "./styles.css";
 import {Button, Grid, TextField, Typography} from "@material-ui/core";
+import Swal from "sweetalert2";
 
 class Arbol {
 
@@ -372,7 +373,13 @@ class App extends Component {
         super(props);
         this.state = {
             arbol: "",
-            orders: 0,
+            altura: 0,
+            gradoRegistro: "",
+            numeroHojas: 0,
+            gradoArbol: 0,
+            resultGradeLog: "",
+            resultLevelLog: "",
+            displayResult: "none"
         };
     }
 
@@ -384,6 +391,43 @@ class App extends Component {
     handleChangeTextField = e => {
         e.preventDefault();
         this.setState({ arbol: e.target.value });
+    }
+
+    handleChangeTextFieldGradeRegister = e => {
+        e.preventDefault();
+        this.setState({ gradoRegistro: e.target.value });
+    }
+
+    validFields = (tree) => {
+        let valid = !( tree === "" )
+
+        if (!valid) {
+            Swal.fire({
+                title: "<span style='color:white'>" + "Error!" + "</span>",
+                html: "<span style='color:white; z-index:1400'>" + "Por favor ingrese el valor del campo" + "</span>",
+                icon: 'error',
+                background: '#2c2d31',
+                confirmButtonText: 'Ok',
+                confirmButtonColor: "#0f4198",
+            });
+            return valid;
+        }
+
+        return (valid);
+    }
+
+    handleCreateTree = async (e) => {
+        e.preventDefault();
+        if (this.validFields(this.state.arbol)) {
+
+        }
+    }
+
+    handleGradeLog = async (e) => {
+        e.preventDefault();
+        if (this.validFields(this.state.gradoRegistro)) {
+
+        }
     }
 
     render() {
@@ -406,6 +450,7 @@ class App extends Component {
                             value={this.state.arbol}
                             onChange={this.handleChangeTextField}
                         />
+                        <Typography variant={"p"}> Por favor ingrese un arbol con este formato (a(b(e,d),c(i(o)),h,u(r(y),t),w))</Typography>
                     </Grid>
                     <Grid item sm={12} xs={12}>
                         <Button
@@ -413,11 +458,150 @@ class App extends Component {
                             color={"primary"}
                             fullWidth
                             variant="contained"
-                            onClick={this.handleEditOffice}
+                            onClick={this.handleCreateTree}
                         > "Crear"
                         </Button>
                     </Grid>
-            </Grid>
+                </Grid>
+                <div className={"result"} style={{display: this.state.displayResult}}>
+                    <Grid container spacing={2}>
+                        <Grid item sm={12} xs={12} >
+                            <Typography variant={"p"}>Resultados del Árbol</Typography>
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                type="text"
+                                fullWidth
+                                label="El arbol que ingreso es: "
+                                variant="outlined"
+                                InputProps={{ maxLength: 50, className: "controls" }}
+                                InputLabelProps={{
+                                    className: "colorWhite",
+                                }}
+                                value={this.state.arbol}
+                                disabled
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                type="text"
+                                fullWidth
+                                label="Su altura del arbol es: "
+                                variant="outlined"
+                                InputProps={{ maxLength: 50, className: "controls" }}
+                                InputLabelProps={{
+                                    className: "colorWhite",
+                                }}
+                                value={this.state.altura}
+                                disabled
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                type="text"
+                                fullWidth
+                                label="Su grado de un arbol es: "
+                                variant="outlined"
+                                InputProps={{ maxLength: 50, className: "controls" }}
+                                InputLabelProps={{
+                                    className: "colorWhite",
+                                }}
+                                value={this.state.gradoArbol}
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                type="text"
+                                fullWidth
+                                label="El numero de hojas del arbol es: "
+                                variant="outlined"
+                                InputProps={{ maxLength: 50, className: "controls" }}
+                                InputLabelProps={{
+                                    className: "colorWhite",
+                                }}
+                                value={this.state.numeroHojas}
+                            />
+                        </Grid>
+                        <Grid item sm={9} xs={12}>
+                            <TextField
+                                type="text"
+                                fullWidth
+                                label="Por favor ingrese el dato para calcular el grado de un registro"
+                                variant="outlined"
+                                InputProps={{ maxLength: 50, className: "controls" }}
+                                InputLabelProps={{
+                                    className: "colorWhite",
+                                }}
+                                value={this.state.gradoRegistro}
+                                onChange={this.handleChangeTextFieldGradeLog}
+                            />
+                        </Grid>
+                        <Grid item sm={3} xs={12}>
+                            <Button
+                                color={"primary"}
+                                fullWidth
+                                variant="contained"
+                                onClick={this.handleGradeLog}
+                            > "Enviar"
+                            </Button>
+                        </Grid>
+                        <Grid item sm={12} xs={12}>
+                            <Typography variant={"h8"}>El grado de su registro es: {this.state.resultGradeLog}</Typography>
+                        </Grid>
+                        <Grid item sm={9} xs={12}>
+                            <TextField
+                                type="text"
+                                fullWidth
+                                label="Por favor ingrese el dato para calcular el nivel en el cual se halla un registro"
+                                variant="outlined"
+                                InputProps={{ maxLength: 50, className: "controls" }}
+                                InputLabelProps={{
+                                    className: "colorWhite",
+                                }}
+                                value={this.state.gradoRegistro}
+                                onChange={this.handleChangeTextFieldGradeLog}
+                            />
+                        </Grid>
+                        <Grid item sm={3} xs={12}>
+                            <Button
+                                color={"primary"}
+                                fullWidth
+                                variant="contained"
+                                onClick={this.handleGradeLog}
+                            > "Enviar"
+                            </Button>
+                        </Grid>
+                        <Grid item sm={12} xs={12}>
+                            <Typography variant={"h8"}>El nivel de su registro es: {this.state.resultLevelLog}</Typography>
+                        </Grid>
+                        <Grid item sm={9} xs={12}>
+                            <TextField
+                                type="text"
+                                fullWidth
+                                label="Por favor ingrese el dato para calcular sus ancestros"
+                                variant="outlined"
+                                InputProps={{ maxLength: 50, className: "controls" }}
+                                InputLabelProps={{
+                                    className: "colorWhite",
+                                }}
+                                value={this.state.gradoRegistro}
+                                onChange={this.handleChangeTextFieldGradeLog}
+                            />
+                        </Grid>
+                        <Grid item sm={3} xs={12}>
+                            <Button
+                                color={"primary"}
+                                fullWidth
+                                variant="contained"
+                                onClick={this.handleGradeLog}
+                            > "Enviar"
+                            </Button>
+                        </Grid>
+                        <Grid item sm={12} xs={12}>
+                            <Typography variant={"h8"}>Los ancentros del registro son: {this.state.resultLevelLog}</Typography>
+                        </Grid>
+                    </Grid>
+                </div>
             </div>
         );
     }

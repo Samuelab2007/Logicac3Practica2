@@ -10,7 +10,7 @@ body {
 }
 
 .form-register {
-    width: 800px;
+    width: 70%;
     background: #24303c;
     padding: 30px;
     margin: auto;
@@ -53,4 +53,8 @@ body {
     color: white;
     text-decoration: none;
     font-size: 15px;
+}
+
+.result {
+    margin-top: 20px;
 }
