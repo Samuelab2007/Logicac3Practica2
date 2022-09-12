@@ -15,7 +15,7 @@ Ejemplo: "(a(b(c,d),f(g),h))"
 <br>"c, d" son hijos de "b", hermanos entre sí.
 <br>"g" es hijo de "f".
 
-#Cómo ejecutar el proyecto en react
+# Cómo ejecutar el proyecto en react
 
 Primero ejecuta:
 ### `npm i`
