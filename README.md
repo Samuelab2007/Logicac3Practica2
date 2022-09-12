@@ -17,7 +17,7 @@ Ejemplo: "(a(b(c,d),f(g),h))"
 
 # Cómo ejecutar el proyecto en react
 
-Primero ejecuta:
+Primero ejecuta en la terminal el comando:
 ### `npm i`
 
 Cuando termine de instalar todas las dependencias, abres el proyecto con el comando:
